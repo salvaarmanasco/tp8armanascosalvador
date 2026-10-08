@@ -1,0 +1,451 @@
+{
+  "info": {
+    "name": "TP8 - Inventario de productos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "productoId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Crear producto",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/productos",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Producto prueba TP8\",\n  \"precio\": 45000.5,\n  \"stock\": 25\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 201\", function () { pm.response.to.have.status(201); });",
+              "pm.collectionVariables.set(\"productoId\", pm.response.json().id);",
+              "pm.test(\"Disponible\", function () { pm.expect(pm.response.json().disponible).to.eql(true); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Precio negativo",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/productos",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Producto prueba TP8\",\n  \"precio\": -1,\n  \"stock\": 25\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Nombre vacío",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/productos",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \" \",\n  \"precio\": 45000.5,\n  \"stock\": 25\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Precio nulo",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/productos",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Producto prueba TP8\",\n  \"precio\": null,\n  \"stock\": 25\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Stock nulo",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/productos",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Producto prueba TP8\",\n  \"precio\": 45000.5,\n  \"stock\": null\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Stock negativo",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/productos",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Producto prueba TP8\",\n  \"precio\": 45000.5,\n  \"stock\": -1\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Listar productos",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/productos"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Obtener producto",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/productos/{{productoId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Id inexistente",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/productos/9223372036854775807"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 404\", function () { pm.response.to.have.status(404); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Actualizar producto",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/productos/{{productoId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Producto actualizado TP8\",\n  \"precio\": 46000.5,\n  \"stock\": 0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"Sin stock\", function () { pm.expect(pm.response.json().disponible).to.eql(false); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Actualizar id inexistente",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/productos/9223372036854775807",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Producto prueba TP8\",\n  \"precio\": 45000.5,\n  \"stock\": 25\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 404\", function () { pm.response.to.have.status(404); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Actualizar con datos inválidos",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/productos/{{productoId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Producto prueba TP8\",\n  \"precio\": 0,\n  \"stock\": 25\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Buscar con resultados",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/productos/buscar?nombre=Producto%20actualizado%20TP8"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Buscar sin resultados",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/productos/buscar?nombre=NoExisteTP8"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 404\", function () { pm.response.to.have.status(404); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Eliminar producto",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/productos/{{productoId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 204\", function () { pm.response.to.have.status(204); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Repetir eliminación",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/productos/{{productoId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 404\", function () { pm.response.to.have.status(404); });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
